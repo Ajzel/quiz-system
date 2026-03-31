@@ -1,0 +1,43 @@
+# AI Usage Documentation
+
+This file documents how AI (Claude by Anthropic) was used during development.
+
+## Tool Used
+Claude (claude.ai) — used as a step-by-step development guide throughout the project.
+
+## Usage Log
+
+### 1. Project Setup
+**Prompt:** Guide me step by step in setting up Laravel on Windows with MySQL.  
+**Output:** Installation steps for XAMPP, Composer, Laravel project creation, .env config.  
+**Correction:** Composer was not in PATH after install — fixed by re-running the installer.
+
+### 2. Database Migrations
+**Prompt:** Create migrations for quizzes, questions, options, attempts, answers tables.  
+**Output:** Full migration files with correct foreign keys and column types.  
+**Correction:** None — ran successfully on first attempt.
+
+### 3. Models
+**Prompt:** Create Eloquent models with relationships and fillable fields.  
+**Output:** All 5 model files with hasMany/belongsTo relationships and $casts for JSON.  
+**Correction:** None required.
+
+### 4. Evaluation Service
+**Prompt:** Create a QuestionEvaluator service that scores all 5 question types without hardcoding logic in controllers.  
+**Output:** `app/Services/QuestionEvaluator.php` using match expression.  
+**Correction:** None required.
+
+### 5. Controllers & Routes
+**Prompt:** Create QuizController, QuestionController, AttemptController and register routes.  
+**Output:** Full controller files and web.php routes.  
+**Correction:** None required.
+
+### 6. Blade Views
+**Prompt:** Create Blade views for quiz list, create, show, question form, take quiz, result.  
+**Output:** 7 view files with correct form handling for all question types.  
+**Correction:** None required.
+
+## Key Design Decisions Influenced by AI
+- Using JSON column for `answers.value` to handle all question types uniformly
+- Centralizing all evaluation logic in a single service class
+- Storing correct answers as option rows even for number/text types for consistency
