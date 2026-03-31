@@ -16,3 +16,6 @@ Route::post('/quizzes/{quiz}/attempts', [AttemptController::class, 'start'])->na
 Route::get('/attempts/{attempt}/take', [AttemptController::class, 'take'])->name('attempts.take');
 Route::post('/attempts/{attempt}/submit', [AttemptController::class, 'submit'])->name('attempts.submit');
 Route::get('/attempts/{attempt}/result', [AttemptController::class, 'result'])->name('attempts.result');
+Route::get('/quizzes/{quiz}/questions/{question}/edit', [QuestionController::class, 'edit'])->name('questions.edit');
+Route::put('/quizzes/{quiz}/questions/{question}', [QuestionController::class, 'update'])->name('questions.update');
+Route::delete('/quizzes/{quiz}/questions/{question}', [QuestionController::class, 'destroy'])->name('questions.destroy');

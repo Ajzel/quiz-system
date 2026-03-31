@@ -31,8 +31,20 @@ class AttemptController extends Controller {
                 'value'       => is_array($raw) ? $raw : [$raw],
             ]);
 
-            $answerValue = is_array($raw) ? $raw : $raw;
-            $totalScore += $evaluator->evaluate($question, $answerValue);
+            if ($question->type === 'multiple') {
+                $answerValue = is_array($raw) ? $raw : [$raw];
+            } else {
+                $answerValue = is_array($raw) ? $raw[0] : $raw;
+            }
+
+            $result = $evaluator->evaluate($question, $answerValue);
+            \Log::info('QUESTION SCORE', [
+            'question_id' => $question->id,
+            'type'        => $question->type,
+            'answer'      => $answerValue,
+            'score'       => $result,
+            ]);
+            $totalScore += $result;
         }
 
         $attempt->update([
@@ -42,7 +54,7 @@ class AttemptController extends Controller {
 
         return redirect()->route('attempts.result', $attempt);
     }
-
+    
     public function result(Attempt $attempt) {
         $attempt->load('quiz.questions.options', 'answers');
         return view('attempts.result', compact('attempt'));

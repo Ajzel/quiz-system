@@ -14,11 +14,19 @@
     @foreach($attempt->quiz->questions as $q)
         @php
             $ans = $attempt->answers->firstWhere('question_id', $q->id);
-            $given = $ans ? $ans->value : [];
+            $given = $ans ? (array)$ans->value : [];
         @endphp
         <div class="card">
             <p><strong>Q{{ $loop->iteration }}.</strong> {!! $q->body !!}</p>
-            <p>Your answer: <em>{{ implode(', ', (array)$given) }}</em></p>
+
+            @if(in_array($q->type, ['single','multiple']))
+                @php
+                    $selectedOptions = $q->options->whereIn('id', $given);
+                @endphp
+                <p>Your answer: <em>{{ $selectedOptions->pluck('text')->join(', ') }}</em></p>
+            @else
+                <p>Your answer: <em>{{ implode(', ', $given) }}</em></p>
+            @endif
         </div>
     @endforeach
 

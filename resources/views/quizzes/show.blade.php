@@ -22,6 +22,12 @@
                 <br><a href="{{ $q->video_url }}" target="_blank">📹 Video</a>
             @endif
             <p style="color:#6b7280;font-size:0.85em">Marks: {{ $q->marks }} | Options: {{ $q->options->count() }}</p>
+            <a href="{{ route('questions.edit', [$quiz, $q]) }}" class="btn" style="font-size:0.8em">Edit</a>
+            <form method="POST" action="{{ route('questions.destroy', [$quiz, $q]) }}" style="display:inline" onsubmit="return confirm('Delete this question?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-red" style="font-size:0.8em;margin-left:4px">Delete</button>
+            </form>
         </div>
     @empty
         <p>No questions yet.</p>

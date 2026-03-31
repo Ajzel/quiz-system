@@ -51,4 +51,33 @@ class QuestionController extends Controller {
 
         return redirect()->route('quizzes.show', $quiz)->with('success', 'Question added!');
     }
+public function edit(Quiz $quiz, Question $question) {
+        return view('questions.edit', compact('quiz', 'question'));
+    }
+
+    public function update(Request $request, Quiz $quiz, Question $question) {
+        $request->validate([
+            'body'  => 'required|string',
+            'marks' => 'integer|min:1',
+        ]);
+
+        $question->update([
+            'body'      => $request->body,
+            'marks'     => $request->marks ?? 1,
+            'video_url' => $request->video_url,
+        ]);
+
+        foreach ($request->input('option_text', []) as $id => $text) {
+            $question->options()->where('id', $id)->update([
+                'text'       => $text,
+                'is_correct' => in_array($id, $request->input('is_correct', [])),
+            ]);
+        }
+
+        return redirect()->route('quizzes.show', $quiz)->with('success', 'Question updated!');
+    }
+    public function destroy(Quiz $quiz, Question $question) {
+    $question->delete();
+    return redirect()->route('quizzes.show', $quiz)->with('success', 'Question deleted!');
+    }
 }

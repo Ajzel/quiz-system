@@ -27,9 +27,27 @@ class QuestionEvaluator {
     }
 
     private function evaluateMultiple(Question $question, $answer): float {
-        $correctIds = $question->options()->where('is_correct', true)->pluck('id')->map(fn($id) => (string)$id)->sort()->values()->toArray();
-        $given = collect((array)$answer)->map(fn($id) => (string)$id)->sort()->values()->toArray();
-        return $correctIds === $given ? $question->marks : 0;
+    $correctIds = $question->options()
+        ->where('is_correct', true)
+        ->pluck('id')
+        ->map(fn($id) => (string)$id)
+        ->sort()
+        ->values()
+        ->toArray();
+
+    $given = collect(is_array($answer) ? $answer : [$answer])
+        ->map(fn($id) => (string)$id)
+        ->sort()
+        ->values()
+        ->toArray();
+
+    \Log::info('MULTIPLE EVAL', [
+        'correctIds' => $correctIds,
+        'given'      => $given,
+        'match'      => $correctIds === $given,
+    ]);
+
+    return $correctIds === $given ? $question->marks : 0;
     }
 
     private function evaluateNumber(Question $question, $answer): float {
